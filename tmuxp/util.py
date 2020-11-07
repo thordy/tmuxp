@@ -137,13 +137,9 @@ def get_window(session, window_name=None, current_pane=None):
         if not window:
             raise exc.TmuxpException('Window not found: %s' % window_name)
     elif current_pane is not None:
-        print('get_window: current_pane')
         window = session.find_where({'window_id': current_pane['window_id']})
     else:
-        print('get_window: else')
         window = session.list_windows()[0]
-
-    print(f'get_window: {window}')
 
     return window
 
