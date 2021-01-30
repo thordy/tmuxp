@@ -13,9 +13,8 @@ from libtmux import Window
 from libtmux.common import has_gte_version
 from libtmux.test import retry, temp_session
 from tmuxp import config, exc
-from tmuxp._compat import text_type
-from tmuxp.workspacebuilder import WorkspaceBuilder
 from tmuxp.cli import load_plugins
+from tmuxp.workspacebuilder import WorkspaceBuilder
 
 from . import example_dir, fixtures_dir
 from .fixtures._util import loadfixture
@@ -326,14 +325,14 @@ def test_window_shell(session):
 
     for w, wconf in builder.iter_create_windows(s):
         if 'window_shell' in wconf:
-            assert wconf['window_shell'] == text_type('top')
+            assert wconf['window_shell'] == str('top')
 
         while retry():
             session.server._update_windows()
             if w['window_name'] != 'top':
                 break
 
-        assert w.name != text_type('top')
+        assert w.name != str('top')
 
 
 def test_environment_variables(session):
@@ -392,7 +391,7 @@ def test_automatic_rename_option(session):
         if w.name == 'sh':
             break
 
-    assert w.name == text_type('sh')
+    assert w.name == 'sh'
 
     w.select_pane('-D')
 
@@ -401,7 +400,7 @@ def test_automatic_rename_option(session):
         if w['window_name'] != 'sh':
             break
 
-    assert w.name != text_type('sh')
+    assert w.name != 'sh'
 
 
 def test_blank_pane_count(session):
@@ -858,9 +857,9 @@ def test_find_current_active_pane(server, monkeypatch):
 
     # Assign an active pane to the session
     second_session = server.list_sessions()[1]
-    first_pane_on_second_session_id = (
-        second_session.list_windows()[0].list_panes()[0]["pane_id"]
-    )
+    first_pane_on_second_session_id = second_session.list_windows()[0].list_panes()[0][
+        "pane_id"
+    ]
     monkeypatch.setenv("TMUX_PANE", first_pane_on_second_session_id)
 
     builder = WorkspaceBuilder(sconf=sconfig, server=server)
